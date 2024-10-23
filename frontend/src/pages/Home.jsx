@@ -1,5 +1,5 @@
-import React from 'react';
-import { Button } from '@mui/material';
+import React, { useState } from 'react';
+import { Button, Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
@@ -16,9 +16,26 @@ const VisuallyHiddenInput = styled('input')({
 });
 
 const Home = () => {
+    const [image, setImage] = useState();
+    function handleUpload(event) {
+        console.log(event.target.files[0]);
+        setImage((URL.createObjectURL(event.target.files[0])));
+    }
     return (
         <>
             <h1>Home</h1>
+            <Box
+                component="img"
+                sx={{
+                    height: 233,
+                    width: 350,
+                    maxHeight: { xs: 233, md: 167 },
+                    maxWidth: { xs: 350, md: 250 },
+                }}
+                alt=""
+                src={image}
+            />
+            <br />
             <Button
                 component="label"
                 role={undefined}
@@ -29,7 +46,7 @@ const Home = () => {
                 Upload files
                 <VisuallyHiddenInput
                     type="file"
-                    onChange={(event) => console.log(event.target.files)}
+                    onChange={handleUpload}
                     multiple
                 />
             </Button>
