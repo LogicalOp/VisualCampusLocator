@@ -10,6 +10,16 @@ const lightTheme = createTheme({
       main: '#18181c',
     },
   },
+  /*components: {
+    MuiAppBar: {
+      styleOverrides: {
+        colorInherit: {
+          backgroundColor: '#F0F',
+          color: '#fff',
+        },
+      },
+    },
+  },*/
 });
 
 const darkTheme = createTheme({

@@ -1,9 +1,11 @@
-body, html {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-  
-  #root {
-    padding: 20px;
-  }
+body,
+html {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  justify-content: center;
+}
+
+#root {
+  padding: 0rem;
+}

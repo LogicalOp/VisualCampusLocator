@@ -1,9 +1,7 @@
 import React from "react";
-import Box from "@mui/material/Box";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio, { radioClasses } from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
-import { useColorScheme } from "@mui/material/styles";
 import { useTheme } from "@mui/material/styles";
 
 function System() {
@@ -14,7 +12,7 @@ function System() {
             height="24"
             viewBox="0 0 24 24"
             fill="none"
-            stroke="currentColor"
+            stroke="white"
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -32,7 +30,7 @@ function DarkMode() {
             height="20"
             viewBox="0 0 24 24"
             fill="none"
-            stroke="currentColor"
+            stroke="white"
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -50,7 +48,7 @@ function LightMode() {
             height="24"
             viewBox="0 0 24 24"
             fill="none"
-            stroke="currentColor"
+            stroke="white"
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"

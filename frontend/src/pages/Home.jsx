@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
-import { Button, Box } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import { useTheme } from '@mui/material/styles';
+import { Button, Box, Stack, CircularProgress, Backdrop } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import NavigateNextSharpIcon from '@mui/icons-material/NavigateNextSharp';
+import ClearSharpIcon from '@mui/icons-material/ClearSharp';
 
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -17,39 +21,119 @@ const VisuallyHiddenInput = styled('input')({
 
 const Home = () => {
     const [image, setImage] = useState();
+    const [preview, setPreview] = useState();
+    const [isUploading, setIsUploading] = useState(false);
+    const theme = useTheme();
+    const navigate = useNavigate();
+
     function handleUpload(event) {
-        console.log(event.target.files[0]);
-        setImage((URL.createObjectURL(event.target.files[0])));
+        const file = event.target.files[0];
+        setImage(file);
+        setPreview(URL.createObjectURL(file));
+    };
+
+    async function handleSubmit() {
+        if (!image) {
+            return;
+        }
+
+        setIsUploading(true);
+
+        const formData = new FormData();
+        formData.append('file', image);
+
+        try {
+            const response = await fetch('http://localhost:3000/image', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (!response.ok) {
+                console.error('Failed to upload image');
+                return;
+            }
+
+            const result = await response.json();
+            console.log(result);
+            navigate('/test');
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setIsUploading(false);
+        }
     }
+
     return (
         <>
-            <h1>Home</h1>
-            <Box
-                component="img"
-                sx={{
-                    height: 233,
-                    width: 350,
-                    maxHeight: { xs: 233, md: 167 },
-                    maxWidth: { xs: 350, md: 250 },
-                }}
-                alt=""
-                src={image}
-            />
-            <br />
-            <Button
-                component="label"
-                role={undefined}
-                variant="contained"
-                tabIndex={-1}
-                startIcon={<CloudUploadIcon />}
-            >
-                Upload files
-                <VisuallyHiddenInput
-                    type="file"
-                    onChange={handleUpload}
-                    multiple
+            {preview && (
+                <Box
+                    component="img"
+                    sx={{
+                        height: 233,
+                        width: 350,
+                        maxHeight: { xs: 233, md: 167 },
+                        maxWidth: { xs: 350, md: 250 },
+                        alignItems: 'center',
+                        display: 'flex',
+                        margin: 'auto',
+                    }}
+                    alt=""
+                    src={preview}
                 />
-            </Button>
+            )}
+            <br />
+            <Stack spacing={2} direction="row">
+                {image && (
+                    <Button
+                        component="label"
+                        role={undefined}
+                        variant="contained"
+                        tabIndex={-1}
+                        onClick={() => {
+                            setImage();
+                            setPreview();
+                        }}
+                        startIcon={<ClearSharpIcon />}
+                    >
+                        Cancel
+                    </Button>
+                )}
+                <Button
+                    component="label"
+                    role={undefined}
+                    variant="contained"
+                    tabIndex={-1}
+                    startIcon={<CloudUploadIcon />}
+                    disabled={!!image}
+                >
+                    Upload files
+                    <VisuallyHiddenInput
+                        type="file"
+                        onChange={handleUpload}
+                        multiple
+                    />
+                </Button>
+                {image && (
+
+                    <Button
+                        component="label"
+                        role={undefined}
+                        variant="contained"
+                        tabIndex={-1}
+                        onClick={handleSubmit}
+                        endIcon={<NavigateNextSharpIcon />}
+                        disabled={isUploading}
+                    >
+                        Next
+                    </Button>
+                )}
+            </Stack>
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={isUploading}
+            >
+                <CircularProgress sx={{ color: theme.palette.primary.main, size: '3rem'}} />
+            </Backdrop>
         </>
     );
 };
