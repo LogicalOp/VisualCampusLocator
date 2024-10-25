@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import CssBaseline from '@mui/material/CssBaseline';
 import Header from './components/Header';
 import Home from './pages/Home';
-import Test from './pages/Test';
+import Results from './pages/Results';
 import { lightTheme, darkTheme } from './themes/theme';
 import './App.css'
 
@@ -23,7 +23,7 @@ function App() {
         <Header setTheme={setTheme} />
           <Routes>
             <Route path='/' element={<Home />} />
-            <Route path='/test' element={<Test />} />
+            <Route path='/results' element={<Results />} />
           </Routes>
         </Router>
       </ThemeProvider>

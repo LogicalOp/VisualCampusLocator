@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { Box } from '@mui/material/';
 import CampusMap from '../components/CampusMap';
 
-const Test = () => {
+const Results = () => {
     const location = useLocation();
     // Get the coordinates from the previous page (Building, Coordinates)
     const { longitude, latitude, building } = location.state || { longitude: -6.60037, latitude: 53.38392, building: null };
@@ -25,4 +25,4 @@ const Test = () => {
     );
 };
 
-export default Test;
+export default Results;
