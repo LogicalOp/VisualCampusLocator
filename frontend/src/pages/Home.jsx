@@ -55,7 +55,8 @@ const Home = () => {
 
             const result = await response.json();
             console.log(result);
-            navigate('/test');
+            // Navigate to the next page with results (Building name, Coordinates) (Unfinished)
+            navigate('/test', { state: { longitude: -6.60037, latitude: 53.38392 } });
         } catch (error) {
             console.error(error);
         } finally {
