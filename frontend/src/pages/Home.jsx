@@ -69,10 +69,10 @@ const Home = () => {
                 <Box
                     component="img"
                     sx={{
-                        height: 233,
-                        width: 350,
-                        maxHeight: { xs: 233, md: 167 },
-                        maxWidth: { xs: 350, md: 250 },
+                        height: 900,
+                        width: 900,
+                        maxHeight: { xs: 233, md: 167, lg: 250 },
+                        maxWidth: { xs: 350, md: 250, lg: 350 },
                         alignItems: 'center',
                         display: 'flex',
                         margin: 'auto',

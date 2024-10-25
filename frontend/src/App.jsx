@@ -19,8 +19,8 @@ function App() {
     <>
       <ThemeProvider theme={getTheme()}>
         <CssBaseline />
-        <Header setTheme={setTheme} />
         <Router>
+        <Header setTheme={setTheme} />
           <Routes>
             <Route path='/' element={<Home />} />
             <Route path='/test' element={<Test />} />
