@@ -22,11 +22,20 @@ const CampusMap = ({ longitude, latitude, building }) => {
         <Map
             mapboxAccessToken="pk.eyJ1IjoibG9naWNhbG9wIiwiYSI6ImNtMmQ2cGV5MjE5cWUyanIyaWluM3UxNjIifQ.yL7tFy0NzUNmMWq7jtTHCg"
             initialViewState={{
-                longitude: markerCoordinates.longitude,
-                latitude: markerCoordinates.latitude,
-                zoom: 15
+                longitude: -6.60037,
+                latitude: 53.38392,
+                zoom: 15.5,
             }}
-            style={{ width: '100%', height: '100%' }}
+            style={{
+                height: 510,
+                width: 650,
+                maxHeight: { xs: 233, md: 167, lg: 500 },
+                maxWidth: { xs: 350, md: 250, lg: 650 },
+                alignItems: "center",
+                display: "flex",
+                margin: "auto",
+                borderRadius: 15,
+            }}
             mapStyle="mapbox://styles/mapbox/dark-v9"
             interactiveLayerIds={['polygon']}
             onPointerMove={(event) => {
@@ -47,38 +56,11 @@ const CampusMap = ({ longitude, latitude, building }) => {
                     title: clickedFeature.properties.title
                 } : null);
             }}
-        >
-            <Source id="my-data" type="geojson" data={geojson}>
-                <Layer
-                    id="polygon"
-                    type="fill"
-                    paint={{
-                        'fill-color': '#555555',
-                        'fill-opacity': 0.5
-                    }}
-                />
-                <Layer
-                    id="outline"
-                    type="line"
-                    paint={{
-                        'line-color': '#555555',
-                        'line-width': 2
-                    }}
-                />
-            </Source>
-            {hoverInfo && (
-                <Popup
-                    longitude={hoverInfo.longitude}
-                    latitude={hoverInfo.latitude}
-                    closeButton={false}
-                    closeOnClick={false}
-                    anchor="top"
-                >
-                    <Typography sx={{ color: 'black' }}>{hoverInfo.title}</Typography>
-                </Popup>
+        >       
+            {building && (
+                <Marker longitude={markerCoordinates.longitude} latitude={markerCoordinates.latitude} color="red" onClick={(e) => e.originalEvent.stopPropagation()}>
+                </Marker>
             )}
-            <Marker longitude={markerCoordinates.longitude} latitude={markerCoordinates.latitude} color="red" onClick={(e) => e.originalEvent.stopPropagation()}>
-            </Marker>
         </Map>
     );
 };
