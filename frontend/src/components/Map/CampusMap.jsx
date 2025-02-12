@@ -35,11 +35,26 @@ const CampusMap = () => {
     setFiles(files.filter((file) => file !== fileToRemove));
   };
 
-  const handleSubmit = () => {
-    // Handle file upload submission
-    console.log('Files submitted:', files);
-    setIsDialogOpen(false); // Close the dialog
-    setShowResults(true); // Show the results panel
+  const handleSubmit = async () => {
+    const formData = new FormData();
+    formData.append('file', files[0]);
+
+    try {
+      const response = await fetch('http://localhost:3000/image/', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (response.ok) {
+        console.log('Files submitted:', files);
+        setIsDialogOpen(false); // Close the dialog
+        setShowResults(true); // Show the results panel
+      } else {
+        throw new Error('Upload failed');
+      }
+    } catch (error) {
+      console.error('Upload failed: Please try again', error);
+    }
   };
 
   const handleCloseResults = () => {
@@ -91,12 +106,12 @@ const CampusMap = () => {
             </div>
           )}
           <Button onClick={handleSubmit} style={{ marginTop: '10px' }} disabled={files.length === 0}>Submit</Button>
-          </DialogContent>
+        </DialogContent>
       </Dialog>
       {showResults && (
         <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 3 }}>
-        <ResultsPanel isVisible={showResults} onClose={handleCloseResults} uploadedImage={uploadedImage} />
-      </div>
+          <ResultsPanel isVisible={showResults} onClose={handleCloseResults} uploadedImage={uploadedImage} />
+        </div>
       )}
       <Map
         mapboxAccessToken="pk.eyJ1IjoibG9naWNhbG9wIiwiYSI6ImNtMmQ2cGV5MjE5cWUyanIyaWluM3UxNjIifQ.yL7tFy0NzUNmMWq7jtTHCg"

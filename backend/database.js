@@ -1,30 +1,41 @@
+const knex = require('knex');
+const config = require('./config/database');
+
 const database = {
     knex: null,
-};
 
-/**
- * Prepares the database connection using Knex.js with PostgreSQL client.
- * 
- * This function initializes the `knex` instance with the specified connection
- * details including user, password, host, database, and port.
- * 
- * @async
- * @function prepareDatabase
- * @returns {Promise<void>} A promise that resolves when the database connection is prepared.
- */
-const prepareDatabase = async () => {
-    database.knex = require('knex')({
-        client: 'pg',
-        connection: {
-            user: 'postgres',
-            password: 'postgres',
-            host: 'localhost',
-            database: 'postgres',
-            port: 5432,
+    async connect() {
+        try {
+            if (!this.knex) {
+                this.knex = knex({
+                    client: 'pg',
+                    connection: config.postgres
+                });
+
+                console.log('Database connected');
+            }
+        } catch (error) {
+            console.error('Database connection error', error);
+            process.exit(1);
         }
-    });
+    },
+
+    async disconnect() {
+        try {
+            if (this.knex) {
+                await this.knex.destroy();
+                console.log('Database disconnected');
+            }
+        } catch (error) {
+            console.error('Database disconnection error', error);
+        }
+    }
 };
 
-database.prepareDatabase = prepareDatabase;
+process.on('SIGINT', async () => {
+    console.log('Disconnecting database');
+    await database.disconnect();
+    process.exit(0);
+});
 
 module.exports = database;

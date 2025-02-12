@@ -11,9 +11,14 @@ const database = require('./database');
  * @function prepare
  * @returns {Promise<void>} A promise that resolves when the preparation is complete.
  */
-const prepare = async () => {
-    await database.prepareDatabase();
-    await server.prepareServer();
+const startApp = async () => {
+    try {
+        await database.connect();
+        await server.prepareServer();
+    } catch(err) {
+        console.error(err);
+        process.exit(1);
+    }
 };
 
-prepare();
+startApp();
