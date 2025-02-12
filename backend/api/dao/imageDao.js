@@ -1,4 +1,6 @@
 const database = require('../../database');
+const fs = require('fs');
+const path = require('path');
 
 const getImage = async () => {
     try {
@@ -15,17 +17,18 @@ const getImage = async () => {
 
 const uploadImage = async (file) => {
     try {
-        const { originalname, mimetype, buffer } = file;
+        const { originalname, buffer } = file;
+        const dataFolderPath = path.join(__dirname, '../../../data');
 
-        const [image] = await database.knex('images')
-            .insert({
-                originalname,
-                mimetype,
-                data: buffer
-            })
-            .returning('*');
+        if (!fs.existsSync(dataFolderPath)) {
+            fs.mkdirSync(dataFolderPath);
+        }
 
-        return image;
+        const filePath = path.join(dataFolderPath, originalname);
+
+        fs.writeFileSync(filePath, buffer);
+
+        return { filePath };
     } catch (error) {
         console.error('Error uploading image:', error);
         throw error;
