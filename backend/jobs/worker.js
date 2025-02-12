@@ -1,10 +1,6 @@
 const { Worker } = require('bullmq');
-const Redis = require('ioredis');
+const redisClient = require('../config/redis');
 const { computeSimilarity } = require('../api/services/pythonServices');
-
-const connection = new Redis({
-    maxRetriesPerRequest: null,
-});
 
 const worker = new Worker('image-processing', async (job) => {
     try {
@@ -20,7 +16,7 @@ const worker = new Worker('image-processing', async (job) => {
     } catch (error) {
         console.error('Processing failed:', error);
     }
-}, { connection });
+}, { connection: redisClient });
 
 worker.on('completed', (job) => {
     console.log(`Job ${job.id} completed`);

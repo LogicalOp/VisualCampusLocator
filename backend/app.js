@@ -1,22 +1,16 @@
 const server = require('./server');
 const database = require('./database');
+const logger = require('./config/logger');
+const redisClient = require('./config/redis');
 
-/**
- * Prepares the application by initializing the database and server.
- * 
- * This function is asynchronous and will wait for the database and server
- * preparation to complete before resolving.
- * 
- * @async
- * @function prepare
- * @returns {Promise<void>} A promise that resolves when the preparation is complete.
- */
 const startApp = async () => {
     try {
         await database.connect();
         await server.prepareServer();
+
+        logger.info('Application started successfully');
     } catch(err) {
-        console.error(err);
+        logger.error(`Failed to start the application: ${err}`);
         process.exit(1);
     }
 };

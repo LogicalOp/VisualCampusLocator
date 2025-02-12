@@ -1,10 +1,11 @@
-const { Queue } = require("bullmq");
-const Redis = require("ioredis");
+const { Queue } = require('bullmq');
+const redisClient = require('../config/redis');
 
-const connection = new Redis({
-    maxRetriesPerRequest: null,
-});
+// Queue Initialization
+const imageProcessingQueue = new Queue('image-processing', { connection: redisClient });
+const imageUploadQueue = new Queue('image-upload', { connection: redisClient });
 
-const imageQueue = new Queue("image-processing", { connection });
-
-module.exports = imageQueue;
+module.exports = {
+    imageProcessingQueue,
+    imageUploadQueue,
+};

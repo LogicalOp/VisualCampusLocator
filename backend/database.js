@@ -1,5 +1,6 @@
 const knex = require('knex');
 const config = require('./config/database');
+const logger = require('./config/logger');
 
 const database = {
     knex: null,
@@ -12,10 +13,10 @@ const database = {
                     connection: config.postgres
                 });
 
-                console.log('Database connected');
+                logger.info('Database connection established.')
             }
         } catch (error) {
-            console.error('Database connection error', error);
+            logger.error(`Database connection error: ${error}`);
             process.exit(1);
         }
     },
@@ -24,16 +25,16 @@ const database = {
         try {
             if (this.knex) {
                 await this.knex.destroy();
-                console.log('Database disconnected');
+                logger.info('Database connection terminated.');
             }
         } catch (error) {
-            console.error('Database disconnection error', error);
+            logger.error(`Database disconnection error: ${error}`);
         }
     }
 };
 
 process.on('SIGINT', async () => {
-    console.log('Disconnecting database');
+    logger.warn('Database disconnecting...');
     await database.disconnect();
     process.exit(0);
 });

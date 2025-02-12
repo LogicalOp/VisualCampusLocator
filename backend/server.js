@@ -3,6 +3,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const routes = require('./api/routes');
 const bodyParser = require('body-parser');
+const logger = require('./config/logger');
 
 
 const PORT = process.env.PORT || 3000;
@@ -20,13 +21,14 @@ const prepareServer = () => {
     });
 
     const server = app.listen(PORT, () => {
-        console.log(`Server is running on port ${PORT}`);
+        logger.info(`Server is running on http://localhost:${PORT}`);
     });
 
     process.on('SIGINT', () => {
-        console.log('Stopping server');
+        logger.warn('Shutting down server...');
         server.close(() => {
-            console.log('Server stopped');
+            logger.info('Server shut down gracefully');
+            process.exit(0);
         });
     });
 
