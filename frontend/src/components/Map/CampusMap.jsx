@@ -40,7 +40,7 @@ const CampusMap = () => {
     formData.append('file', files[0]);
 
     try {
-      const response = await fetch('http://localhost:3000/image/', {
+      const response = await fetch('http://localhost:3000/api/image/', {
         method: 'POST',
         body: formData,
       });

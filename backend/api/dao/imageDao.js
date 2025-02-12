@@ -13,6 +13,26 @@ const getImage = async () => {
     }
 };
 
+const uploadImage = async (file) => {
+    try {
+        const { originalname, mimetype, buffer } = file;
+
+        const [image] = await database.knex('images')
+            .insert({
+                originalname,
+                mimetype,
+                data: buffer
+            })
+            .returning('*');
+
+        return image;
+    } catch (error) {
+        console.error('Error uploading image:', error);
+        throw error;
+    }
+};
+
 module.exports = {
     getImage,
+    uploadImage,
 };

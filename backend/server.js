@@ -11,7 +11,6 @@ const prepareServer = () => {
     const app = express();
 
     app.use(cors());
-    app.use(helmet());
     app.use(bodyParser.json());
 
     app.use('/api', routes);
