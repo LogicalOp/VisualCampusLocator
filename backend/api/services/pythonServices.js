@@ -1,4 +1,5 @@
 const { exec } = require('child_process');
+const logger = require('../../config/logger');
 const path = require('path');
 
 const computeSimilarity = () => {
@@ -6,14 +7,14 @@ const computeSimilarity = () => {
         const scriptPath = path.join(__dirname, '../../../scripts/example.py');
         exec(`python ${scriptPath}`, (error, stdout, stderr) => {
             if (error) {
-                console.error(`Error executing script: ${error.message}`);
+                logger.error(`Error executing script: ${error.message}`);
                 return reject(error);
             }
             if (stderr) {
-                console.error(`Script error: ${stderr}`);
+                logger.error(`Script error: ${stderr}`);
                 return reject(new Error(stderr));
             }
-            console.log(`Script output: ${stdout}`);
+            logger.verbose(`Script output: ${stdout}`);
             resolve(stdout);
         });
     });

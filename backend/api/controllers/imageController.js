@@ -1,4 +1,5 @@
 const { fetchImage, uploadToCloud } = require('../services/imageService');
+const imageQueue = require('../../jobs/queue').imageProcessingQueue;
 
 const uploadImage = async (req, res) => {
     try {
@@ -7,6 +8,11 @@ const uploadImage = async (req, res) => {
         }
 
         const image = await uploadToCloud(req.file);
+
+        await imageQueue.add('image-processing', {
+            secureUrl: image.result.secure_url,
+            filePath: image.imgPath.filePath
+        });
 
         return res.status(200).json({
             message: 'Image uploaded successfully and processing started',
