@@ -1,5 +1,4 @@
-const { fetchImage, saveImage } = require('../services/imageService');
-const imageQueue = require('../../jobs/queue');
+const { fetchImage, uploadToCloud } = require('../services/imageService');
 
 const uploadImage = async (req, res) => {
     try {
@@ -7,11 +6,7 @@ const uploadImage = async (req, res) => {
             return res.status(400).json({ message: 'Please provide an image' });
         }
 
-        const image = await saveImage(req.file);
-
-        await imageQueue.add('processImage', {
-            filePath: image.filePath,
-        });
+        const image = await uploadToCloud(req.file);
 
         return res.status(200).json({
             message: 'Image uploaded successfully and processing started',

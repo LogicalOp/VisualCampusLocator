@@ -15,10 +15,10 @@ const getImage = async () => {
     }
 };
 
-const uploadImage = async (file) => {
+const saveImage = async (file) => {
     try {
         const { originalname, buffer } = file;
-        const dataFolderPath = path.join(__dirname, '../../../data');
+        const dataFolderPath = path.join(__dirname, '../../../data/Images');
 
         if (!fs.existsSync(dataFolderPath)) {
             fs.mkdirSync(dataFolderPath);
@@ -37,5 +37,5 @@ const uploadImage = async (file) => {
 
 module.exports = {
     getImage,
-    uploadImage,
+    saveImage,
 };
