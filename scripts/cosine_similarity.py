@@ -1,54 +1,47 @@
 import numpy as np
-from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.preprocessing import normalize
-import os
+from sklearn.metrics.pairwise import cosine_similarity
 
-# Function to extract labels (location, id) from the file names
-def extract_label(file_name):
-    base_name = file_name.replace('.npy', '')
-    components = base_name.split('_')
-    label = {
-        'location': components[0],
-        'id': components[1],
-        # condition: components[2]
-        # time: components[3]
-    }
-    return label
+# Cosine similarity threshold (adjustable)
+SIMILARITY_THRESHOLD = 0.38855427503585815
 
-# Function to calculate cosine similarity between two vectors and return top-K most similar matches
-def find_top_k_matches(query_descriptor, descriptor_files, base_dir, k=10):
-    global_descriptors = []
-    labels = []
-
-    for file in descriptor_files:
-        file_path = os.path.join(base_dir, file)
-        descriptor = np.load(file_path)
-
-        if descriptor.ndim > 1:
-            descriptor = descriptor.flatten()
-
-        global_descriptors.append(descriptor)
-        labels.append(extract_label(file))
-
-    # Ensure global_descriptors is a 2D array
-    if len(global_descriptors) == 0:
-        return ValueError("No descriptors were loaded")
+# Function to find top-K matches with threshold filtering
+def find_top_k_matches(query_descriptor, vectors, k=5):
+    """
+    Given a query descriptor, find the top-K most similar images in the dataset.
     
+    :param query_descriptor: Descriptor of the query image
+    :param vectors: List of dictionaries containing 'id', 'filename', 'normalized_vector'
+    :param k: Number of top matches to retrieve
+    :return: List of top-K matches with similarity scores and labels
+    """
+    global_descriptors = [vector['normalized_vector'] for vector in vectors]
+    labels = [{'id': vector['id'], 'filename': vector['filename']} for vector in vectors]
+
+    # Ensure global_descriptors is a 2D NumPy array
+    if len(global_descriptors) == 0:
+        raise ValueError("No descriptors were loaded! Check your dataset path.")
+
     global_descriptors = np.array(global_descriptors)
 
-    # Reshape if needed
+    # Reshape if needed (ensure it's a 2D array)
     if global_descriptors.ndim == 1:
-        global_descriptors = global_descriptors.reshape(1, -1)
-    
-    # Normalize descriptors ( Using sklaern normalize function)
+        global_descriptors = global_descriptors.reshape(-1, 1)
+
+    # Normalize descriptors
     query_descriptor = normalize(query_descriptor.reshape(1, -1)).flatten()
     global_descriptors = normalize(global_descriptors)
 
-    # Calculate cosine similarity
+    # Compute cosine similarity
     similarities = cosine_similarity(query_descriptor.reshape(1, -1), global_descriptors)
 
-    # Get top-K matches
-    top_k_indices = np.argsort(similarities[0])[-k:][::-1]
-    top_k_matches = [(labels[i], similarities[0][i]) for i in top_k_indices]
+    # Filter matches using threshold
+    valid_matches = [
+        (labels[i], similarities[0][i]) for i in range(len(labels)) if similarities[0][i] >= SIMILARITY_THRESHOLD
+    ]
+
+    # Sort in descending order and keep top-K matches
+    valid_matches.sort(key=lambda x: x[1], reverse=True)
+    top_k_matches = valid_matches[:k]
 
     return top_k_matches
