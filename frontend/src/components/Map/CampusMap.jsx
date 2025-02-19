@@ -128,7 +128,7 @@ const CampusMap = () => {
           left: 0,
           zIndex: 1,
         }}
-        mapStyle="mapbox://styles/mapbox/dark-v9"
+        mapStyle="mapbox://styles/logicalop/cm73hs0j8004z01s6egs83rsw"
       />
     </div>
   );

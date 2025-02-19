@@ -4,7 +4,7 @@ const path = require('path');
 
 const computeSimilarity = () => {
     return new Promise((resolve, reject) => {
-        const scriptPath = path.join(__dirname, '../../../scripts/example.py');
+        const scriptPath = path.join('C:/Users/dylan/Documents/Programming/AnyLoc/demo/top_matches.py');
         exec(`python ${scriptPath}`, (error, stdout, stderr) => {
             if (error) {
                 logger.error(`Error executing script: ${error.message}`);
