@@ -4,7 +4,7 @@ import asyncio
 import json
 import os
 from cosine_similarity import find_top_k_matches
-from database import connect_to_db, fetch_all_entries
+from database import connect_to_db, fetch_all_entries, fetch_entry_by_id
 from epipolar_geometry import feature_match_and_filter
 
 # Load Query descriptor
@@ -50,15 +50,13 @@ async def main():
 
             # Check if the match meets the thresholds
             if num_matches >= num_match_thresh and inlier_ratio >= inlier_ratio_thresh:
-                result = {
-                    "id": label['id'],
-                    "filename": label['filename'],
-                    "score": score,
-                    "num_matches": num_matches,
-                    "inlier_ratio": inlier_ratio
+                result = await fetch_entry_by_id(conn, label['id'])
+                ans = {
+                    "cloud_url": result['cloud_url'],
+                    "filename": os.path.splitext(result['filename'])[0]
                 }
-                print(json.dumps(result))  # Print the result as JSON
-                return result
+                print(json.dumps(ans))
+                return ans
             else:
                 print(f"Rejected Match {i+1}: ID {label['id']}, Filename {label['filename']} with score {score}")
                 print(f"Number of Matches: {num_matches}, Inlier Ratio: {inlier_ratio:.4f}")

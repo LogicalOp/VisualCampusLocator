@@ -2,7 +2,7 @@ const { exec } = require('child_process');
 const logger = require('../../config/logger');
 const path = require('path');
 
-const computeSimilarity = () => {
+const computeSimilarity = (filePath, secureUrl) => {
     return new Promise((resolve, reject) => {
         const scriptPath = path.join('C:/Users/dylan/Documents/Programming/VisualCampusLocator/scripts/vpr.py');
         exec(`python ${scriptPath}`, (error, stdout, stderr) => {
@@ -15,7 +15,13 @@ const computeSimilarity = () => {
                 return reject(new Error(stderr));
             }
             logger.verbose(`Script output: ${stdout}`);
-            resolve(stdout);
+            try {
+                const result = JSON.parse(stdout);
+                resolve(result);
+            } catch (parseError) {
+                logger.error(`Error parsing JSON output: ${parseError.message}`);
+                reject(parseError);
+            }
         });
     });
 };

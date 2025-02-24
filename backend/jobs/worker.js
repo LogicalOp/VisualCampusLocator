@@ -9,16 +9,20 @@ const startWorker = async () => {
             logger.info(`Processing started for: ${job.data.filePath}`);
 
             // Run Python script to extract descriptors
-            const descriptors = await computeSimilarity(job.data.filePath, job.data.secureUrl);
+            const result = await computeSimilarity(job.data.filePath, job.data.secureUrl);
 
             logger.info(`Processing completed for: ${job.data.filePath}`);
+
+            const { cloud_url, filename } = result;
+            return { cloud_url, filename };
         } catch (error) {
             logger.error('Processing failed:', error);
+            throw error;
         }
     }, { connection: redisClient });
 
     worker.on('completed', (job) => {
-        logger.info(`Job ${job.id} completed`);
+        logger.info(`Job ${job.id} completed with result: ${JSON.stringify(job.returnvalue)}`);
     });
 
     worker.on('failed', (job, err) => {

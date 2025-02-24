@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import Map from 'react-map-gl/mapbox';
 import { useDropzone } from 'react-dropzone';
 import { Button } from '@/components/ui/button';
@@ -11,6 +11,8 @@ const CampusMap = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [showResults, setShowResults] = useState(false);
   const [uploadedImage, setUploadedImage] = useState(null);
+  const [resultImage, setResultImage] = useState(null);
+  const [locationName, setLocationName] = useState('');
 
   const onDrop = useCallback((acceptedFiles) => {
     const newFiles = acceptedFiles.map((file) =>
@@ -46,7 +48,15 @@ const CampusMap = () => {
       });
 
       if (response.ok) {
+        const data = await response.json();
         console.log('Files submitted:', files);
+        console.log(data);
+
+        // Strip numbers from the end of the location name
+        const strippedLocationName = data.location_name.replace(/\d+$/, '');
+
+        setResultImage(data.cloud_url);
+        setLocationName(strippedLocationName); // Set the stripped location name
         setIsDialogOpen(false); // Close the dialog
         setShowResults(true); // Show the results panel
       } else {
@@ -110,7 +120,7 @@ const CampusMap = () => {
       </Dialog>
       {showResults && (
         <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 3 }}>
-          <ResultsPanel isVisible={showResults} onClose={handleCloseResults} uploadedImage={uploadedImage} />
+          <ResultsPanel isVisible={showResults} onClose={handleCloseResults} uploadedImage={uploadedImage} imageResult={resultImage} locationName={locationName} />
         </div>
       )}
       <Map

@@ -3,7 +3,7 @@ import { X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 // eslint-disable-next-line react/prop-types
-export default function ResultsPanel({ isVisible, onClose, uploadedImage }) {
+export default function ResultsPanel({ isVisible, onClose, uploadedImage, locationName, imageResult }) {
   return (
     <AnimatePresence>
       {isVisible && (
@@ -31,9 +31,9 @@ export default function ResultsPanel({ isVisible, onClose, uploadedImage }) {
             <Card className="bg-gray-900 rounded-lg overflow-hidden">
               <CardContent className="p-4 flex flex-col items-center">
                 <img
-                  src="https://via.placeholder.com/150"
+                  src={imageResult}
                   alt="Result"
-                  className="w-full h-40 object-cover rounded-lg"
+                  className="w-full h-40 object-contain rounded-lg"
                 />
                 <div className="mt-3 text-center">
                   <p className="text-lg font-semibold">Result</p>
@@ -50,7 +50,7 @@ export default function ResultsPanel({ isVisible, onClose, uploadedImage }) {
                 <img
                   src={uploadedImage}
                   alt="Your Image"
-                  className="w-full h-40 object-cover rounded-lg"
+                  className="w-full h-40 object-contain rounded-lg"
                 />
                 <div className="mt-3 text-center">
                   <p className="text-lg font-semibold">Your Image</p>
@@ -65,7 +65,7 @@ export default function ResultsPanel({ isVisible, onClose, uploadedImage }) {
             <Card className="bg-gray-900 rounded-lg overflow-hidden">
               <CardContent className="p-4 flex flex-col items-center">
                 <div className="mt-3 text-center">
-                  <p className="text-lg font-semibold">Location Name</p>
+                  <p className="text-lg font-semibold">{locationName}</p>
                   <p className="text-sm text-gray-400">
                     The name of the detected location.
                   </p>
