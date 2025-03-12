@@ -1,0 +1,24 @@
+{
+    "buildings": [
+        {
+            "name": "AulaMaxima",
+            "latitude": 53.380387367146355,
+            "longitude": -6.597892870494475
+        },
+        {
+            "name": "Eolas",
+            "latitude": 53.37816732612343,
+            "longitude": -6.596202955079148
+        },
+        {
+            "name": "Iontas",
+            "latitude": 53.38471675451883,
+            "longitude": -6.600882045148099
+        },
+        {
+            "name": "LogicHouse",
+            "latitude": 53.38467107608592,
+            "longitude": -6.601567606349125
+        }
+    ]
+}

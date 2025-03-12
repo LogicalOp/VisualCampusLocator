@@ -1,10 +1,11 @@
 import React, { useState, useCallback } from 'react';
-import Map from 'react-map-gl/mapbox';
+import Map, { Marker } from 'react-map-gl/mapbox';
 import { useDropzone } from 'react-dropzone';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogTrigger, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import ResultsPanel from './ResultsPanel';
 import 'mapbox-gl/dist/mapbox-gl.css';
+import buildingsData from '../../assets/buildings.json';
 
 const CampusMap = () => {
   const [files, setFiles] = useState([]);
@@ -13,6 +14,12 @@ const CampusMap = () => {
   const [uploadedImage, setUploadedImage] = useState(null);
   const [resultImage, setResultImage] = useState(null);
   const [locationName, setLocationName] = useState('');
+  const [marker, setMarker] = useState(null);
+  const [viewState, setViewState] = useState({
+    longitude: -6.60037,
+    latitude: 53.38392,
+    zoom: 15.5,
+  });
 
   const onDrop = useCallback((acceptedFiles) => {
     const newFiles = acceptedFiles.map((file) =>
@@ -59,6 +66,19 @@ const CampusMap = () => {
         setLocationName(strippedLocationName); // Set the stripped location name
         setIsDialogOpen(false); // Close the dialog
         setShowResults(true); // Show the results panel
+
+        const building = buildingsData.buildings.find((building) => building.name === strippedLocationName);
+        if (building) {
+          setMarker({
+            longitude: building.longitude,
+            latitude: building.latitude,
+          });
+          setViewState({
+            longitude: building.longitude,
+            latitude: building.latitude,
+            zoom: 15.5,
+          });
+        }
       } else {
         throw new Error('Upload failed');
       }
@@ -125,11 +145,8 @@ const CampusMap = () => {
       )}
       <Map
         mapboxAccessToken="pk.eyJ1IjoibG9naWNhbG9wIiwiYSI6ImNtMmQ2cGV5MjE5cWUyanIyaWluM3UxNjIifQ.yL7tFy0NzUNmMWq7jtTHCg"
-        initialViewState={{
-          longitude: -6.60037,
-          latitude: 53.38392,
-          zoom: 15.5,
-        }}
+        {...viewState}
+        onMove={evt => setViewState(evt.viewState)}
         style={{
           height: '100%',
           width: '100%',
@@ -139,7 +156,13 @@ const CampusMap = () => {
           zIndex: 1,
         }}
         mapStyle="mapbox://styles/logicalop/cm73hs0j8004z01s6egs83rsw"
-      />
+      >
+        {marker && (
+          <Marker longitude={marker.longitude} latitude={marker.latitude}>
+            <div style={{ backgroundColor: 'red', borderRadius: '50%', width: '10px', height: '10px' }} />
+          </Marker>
+        )}
+      </Map>
     </div>
   );
 };

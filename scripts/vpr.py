@@ -8,7 +8,7 @@ from database import connect_to_db, fetch_all_entries, fetch_entry_by_id
 from epipolar_geometry import feature_match_and_filter
 
 # Load Query descriptor
-# TODO: Retrieve from descriptor generation
+# TODO: Retrieve from descriptor generation (needs GPU & was changed for demo purposes)
 test_file = r"C:\Users\dylan\Documents\Programming\VisualCampusLocator\data\Vectors\Eolas_001.npy"
 query_descriptor = np.load(test_file)
 if query_descriptor.ndim > 1:
